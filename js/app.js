@@ -82,6 +82,7 @@ var Gems = function(){
     this.gem = this.getRandoimg();
     this.x = 101 * getRandomInt(0, 4);
     this.y = 70 * getRandomInt(1, 3);
+    this.points = 0;
 }
 
 Gems.prototype.getRandoimg = function(){
@@ -97,8 +98,21 @@ Gems.prototype.getRandoimg = function(){
     }
 }
 
+Gems.prototype.updatepts = function(){
+    if(this.gem === 'images/Gem Blue.png'){
+        this.points += 5;
+    }
+    else if (this.gem === 'images/Gem Green.png') {
+        this.points += 10;
+    }
+    else if(this.gem === 'images/Gem Orange.png'){
+        this.points += 15;
+    }
+}
+
 Gems.prototype.update = function(){
     if((player.x >= this.x-50.5) && (player.x <= this.x+50.5) && (player.y >= this.y-37.5) && (player.y <= this.y+37.5)){
+        this.updatepts();
         this.gem = this.getRandoimg();
         this.x = 101 * getRandomInt(0, 4);
         this.y = 70 * getRandomInt(1, 3);
@@ -107,6 +121,7 @@ Gems.prototype.update = function(){
 
 Gems.prototype.render = function(){
     ctx.drawImage(Resources.get(this.gem), this.x, this.y);
+    $('h1').text("Points: " + this.points); 
 }
 
 // Now instantiate your objects.
