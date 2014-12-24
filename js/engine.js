@@ -26,6 +26,7 @@ var Engine = (function(global) {
         lastTime;
         finish = false;
         black_white = false;
+        points = 0;
 
     canvas.width = 505;
     canvas.height = 606;
@@ -105,7 +106,9 @@ var Engine = (function(global) {
         allEnemies.forEach(function(enemy) {
             enemy.update(dt);
         });
+        
         player.update();
+        gem.update();
     }
 
     /* This function initially draws the "game level", it will then call

@@ -97,26 +97,16 @@ Gems.prototype.getRandoimg = function(){
     }
 }
 
-Gems.prototype.check_pts = function(){
+Gems.prototype.update = function(){
     if((player.x >= this.x-50.5) && (player.x <= this.x+50.5) && (player.y >= this.y-37.5) && (player.y <= this.y+37.5)){
-        return true;
-    }
-}
-
-Gems.prototype.render = function(){
-    if (this.check_pts()) {
         this.gem = this.getRandoimg();
         this.x = 101 * getRandomInt(0, 4);
         this.y = 70 * getRandomInt(1, 3);
     }
-
-    ctx.drawImage(Resources.get(this.gem), this.x, this.y);
 }
 
-var points = function(){
-    this.text_1 = 'Points: ';
-    this.text_2 = 0;
-    this
+Gems.prototype.render = function(){
+    ctx.drawImage(Resources.get(this.gem), this.x, this.y);
 }
 
 // Now instantiate your objects.
