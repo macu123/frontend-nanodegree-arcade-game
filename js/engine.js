@@ -24,6 +24,8 @@ var Engine = (function(global) {
         canvas = doc.createElement('canvas'),
         ctx = canvas.getContext('2d'),
         lastTime;
+        finish = false;
+        black_white = false;
 
     canvas.width = 505;
     canvas.height = 606;
@@ -80,7 +82,16 @@ var Engine = (function(global) {
      */
     function update(dt) {
         updateEntities(dt);
-        // checkCollisions();
+        checkCollisions();
+    }
+
+    function checkCollisions(){
+        allEnemies.forEach(function(enemy){
+            if((enemy.x >= player.x-50.5) && (enemy.x <= player.x+50.5) && (enemy.y >= player.y-37.5) && (enemy.y <= player.y+37.5)){
+                finish = true;
+                init();
+            }
+        });
     }
 
     /* This is called by the update function  and loops through all of the
@@ -123,6 +134,7 @@ var Engine = (function(global) {
          * and, using the rowImages array, draw the correct image for that
          * portion of the "grid"
          */
+         
         for (row = 0; row < numRows; row++) {
             for (col = 0; col < numCols; col++) {
                 /* The drawImage function of the canvas' context element
@@ -135,8 +147,7 @@ var Engine = (function(global) {
                 ctx.drawImage(Resources.get(rowImages[row]), col * 101, row * 83);
             }
         }
-
-
+        
         renderEntities();
     }
 
@@ -148,6 +159,8 @@ var Engine = (function(global) {
         /* Loop through all of the objects within the allEnemies array and call
          * the render function you have defined.
          */
+        gem.render();
+
         allEnemies.forEach(function(enemy) {
             enemy.render();
         });
@@ -161,6 +174,38 @@ var Engine = (function(global) {
      */
     function reset() {
         // noop
+        /*if(finish === true){
+            black_white = true;
+            render();
+            black_white = false;
+            
+        }*/
+        player.x = 202;
+        player.y = 300;
+
+    }
+
+    function makeGrayScale(){
+        var r, g, b, a;
+        var imageData = ctx.getImageData(0, 0, 505, 606);
+        var numPixels = imageData.data.length/4;
+        for (var i = 0; i < numPixels; i++){
+            r = imageData.data[i*4 + 0];
+            g = imageData.data[i*4 + 1];
+            b = imageData.data[i*4 + 2];
+            a = imageData.data[i*4 + 3];
+            pixel = makePixelGrayScale(r, g, b, a);
+            imageData.data[i*4 + 0] = pixel.r;
+            imageData.data[i*4 + 1] = pixel.g;
+            imageData.data[i*4 + 2] = pixel.b;
+            imageData.data[i*4 + 3] = pixel.a;
+        }
+        ctx.putImageData(imageData, 0, 0);
+    }
+
+    function makePixelGrayScale(r, g, b, a){
+        var y = 0.3*r + 0.59*g + 0.11*b;
+        return{r:y, g:y, b:y, a:y};
     }
 
     /* Go ahead and load all of the images we know we're going to need to
@@ -172,7 +217,10 @@ var Engine = (function(global) {
         'images/water-block.png',
         'images/grass-block.png',
         'images/enemy-bug.png',
-        'images/char-boy.png'
+        'images/char-boy.png',
+        'images/Gem Blue.png',
+        'images/Gem Green.png',
+        'images/Gem Orange.png'
     ]);
     Resources.onReady(init);
 
