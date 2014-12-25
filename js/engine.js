@@ -24,9 +24,7 @@ var Engine = (function(global) {
         canvas = doc.createElement('canvas'),
         ctx = canvas.getContext('2d'),
         lastTime;
-        finish = false;
         black_white = false;
-        points = 0;
 
     canvas.width = 505;
     canvas.height = 700;
@@ -48,9 +46,15 @@ var Engine = (function(global) {
         /* Call our update/render functions, pass along the time delta to
          * our update function since it may be used for smooth animation.
          */
-        update(dt);
+        if(player.life >= 1){
+            update(dt);
+        }
         render();
 
+        if(player.life <= 0){
+            end_game(dt);
+        }
+        
         /* Set our lastTime variable which is used to determine the time delta
          * for the next time this function is called.
          */
@@ -59,8 +63,9 @@ var Engine = (function(global) {
         /* Use the browser's requestAnimationFrame function to call this
          * function again as soon as the browser is able to draw another frame.
          */
+
         win.requestAnimationFrame(main);
-    };
+    }
 
     /* This function does some initial setup that should only occur once,
      * particularly setting the lastTime variable that is required for the
@@ -93,8 +98,10 @@ var Engine = (function(global) {
     function checkCollisions(){
         allEnemies.forEach(function(enemy){
             if((enemy.x >= player.x-50.5) && (enemy.x <= player.x+50.5) && (enemy.y >= player.y-37.5) && (enemy.y <= player.y+37.5)){
-                finish = true;
-                reset();
+                player.life -= 1;
+                if(player.life >= 1){
+                    reset();
+                }
             }
         });
     }
@@ -241,6 +248,11 @@ var Engine = (function(global) {
         }
     }
 
+    function end_game(dt){
+        text_end.update(dt);
+        text_end.render();
+    }
+
     function makeGrayScale(){
         var r, g, b, a;
         var imageData = ctx.getImageData(0, 0, 505, 606);
@@ -282,7 +294,8 @@ var Engine = (function(global) {
         'images/Gem Green.png',
         'images/Gem Orange.png',
         'images/Selector.png',
-        'images/blank.png'
+        'images/blank.png',
+        'images/Heart.png'
     ]);
     Resources.onReady(init);
 

@@ -44,7 +44,8 @@ var Player = function(){
     this.char;
     this.x;
     this.y;
-    
+    this.life = 5;
+    this.heart = 'images/Heart.png';
 }
 
 Player.prototype.update = function(){
@@ -63,20 +64,30 @@ Player.prototype.update = function(){
 
 Player.prototype.render = function(){
     ctx.drawImage(Resources.get(this.char), this.x, this.y);
+    for(var i=0; i<this.life; i++){
+        ctx.drawImage(Resources.get(this.heart), this.x + i*23, this.y + 10);
+    }
 }
 
 Player.prototype.handleInput = function(str){
-    if(str === "left"){
-        this.x -= 101;
-    }
-    else if(str === "up"){
+     if(this.life >= 1){   
+        if(str === "left"){
+            this.x -= 101;
+        }
+        else if(str === "up"){
         this.y -= 78;
+        }
+        else if(str === "right"){
+            this.x += 101;
+        }
+        else if (str === "down"){
+            this.y += 78;
+        }
     }
-    else if(str === "right"){
-        this.x += 101;
-    }
-    else if (str === "down"){
-        this.y += 78;
+    else{
+        if(str === "enter"){
+            this.life = 6;
+        }
     }
 
 }
@@ -123,8 +134,9 @@ Gems.prototype.update = function(){
 }
 
 Gems.prototype.render = function(){
+    ctx.font = "30px Arial";
+    ctx.fillText("Points: " + this.points, 350, 80);
     ctx.drawImage(Resources.get(this.gem), this.x, this.y);
-    $('h1').text("Points: " + this.points); 
 }
 
 var Selectors = function(){
@@ -178,6 +190,33 @@ Selectors.prototype.selectchar = function(){
     }
 }
 
+var Texts_end = function(){
+    this.x = 252.5;
+    this.y = 350;
+    this.up = true;
+}
+
+Texts_end.prototype.update = function(dt){
+    if(this.y <= 200){
+        this.up = false;
+    }else if(this.y >= 600){
+        this.up = true;
+    }
+
+    if(this.up === true){
+        this.y -= 200*dt;
+    }else{
+        this.y += 200*dt;
+    }
+}
+
+Texts_end.prototype.render = function(){
+    ctx.font = "30px Verdana";
+    ctx.textAlign = "center";
+    ctx.fillText("Game Over!", this.x, this.y);
+    ctx.fillText("Please press Enter to restart!", this.x, this.y + 40);
+}
+
 // Now instantiate your objects.
 // Place all enemy objects in an array called allEnemies
 // Place the player object in a variable called player
@@ -190,6 +229,7 @@ var player = new Player();
 var allEnemies = [];
 var gem = new Gems();
 var selector = new Selectors();
+var text_end = new Texts_end();
 allEnemies.push(enemy1);
 allEnemies.push(enemy2);
 allEnemies.push(enemy3);
