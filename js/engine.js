@@ -67,6 +67,10 @@ var Engine = (function(global) {
      * game loop.
      */
     function init() {
+        selectPlayer();   
+    }
+
+    function start_game(){
         reset();
         lastTime = Date.now();
         main();
@@ -90,7 +94,7 @@ var Engine = (function(global) {
         allEnemies.forEach(function(enemy){
             if((enemy.x >= player.x-50.5) && (enemy.x <= player.x+50.5) && (enemy.y >= player.y-37.5) && (enemy.y <= player.y+37.5)){
                 finish = true;
-                init();
+                reset();
             }
         });
     }
@@ -188,6 +192,54 @@ var Engine = (function(global) {
 
     }
 
+    function selectPlayer(){
+        var rowImages = [
+            'images/blank.png',      //Row of blank
+            'images/stone-block.png'   // Row of stone
+            ],
+            charImages = [
+                'images/char-boy.png',
+                'images/char-cat-girl.png',
+                'images/char-horn-girl.png',
+                'images/char-pink-girl.png',
+                'images/char-princess-girl.png'
+                ],
+            numRows = 2,
+            numCols = 5,
+            row,
+            col;
+
+        /* Loop through the number of rows and columns we've defined above
+         * and, using the rowImages array, draw the correct image for that
+         * portion of the "grid"
+         */
+        for (row = 0; row < numRows; row++) {
+            for (col = 0; col < numCols; col++) {
+                /* The drawImage function of the canvas' context element
+                 * requires 3 parameters: the image to draw, the x coordinate
+                 * to start drawing and the y coordinate to start drawing.
+                 * We're using our Resources helpers to refer to our images
+                 * so that we get the benefits of caching these images, since
+                 * we're using them over and over.
+                 */
+                ctx.drawImage(Resources.get(rowImages[row]), col * 101, (row+2) * 83);
+            }
+        }
+
+        selector.update();
+        selector.render();
+
+        for (col = 0; col < numCols; col++){
+            ctx.drawImage(Resources.get(charImages[col]), col * 101, 234);
+        }
+        
+        if(selector.finish === true){
+            start_game();
+        }else{
+            win.requestAnimationFrame(selectPlayer);
+        }
+    }
+
     function makeGrayScale(){
         var r, g, b, a;
         var imageData = ctx.getImageData(0, 0, 505, 606);
@@ -221,9 +273,15 @@ var Engine = (function(global) {
         'images/grass-block.png',
         'images/enemy-bug.png',
         'images/char-boy.png',
+        'images/char-cat-girl.png',
+        'images/char-horn-girl.png',
+        'images/char-pink-girl.png',
+        'images/char-princess-girl.png',
         'images/Gem Blue.png',
         'images/Gem Green.png',
-        'images/Gem Orange.png'
+        'images/Gem Orange.png',
+        'images/Selector.png',
+        'images/blank.png'
     ]);
     Resources.onReady(init);
 

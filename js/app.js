@@ -41,7 +41,9 @@ Enemy.prototype.render = function() {
 // This class requires an update(), render() and
 // a handleInput() method.
 var Player = function(){
-    this.boy = 'images/char-boy.png';
+    this.char;
+    this.x;
+    this.y;
 }
 
 Player.prototype.update = function(){
@@ -59,21 +61,21 @@ Player.prototype.update = function(){
 }
 
 Player.prototype.render = function(){
-    ctx.drawImage(Resources.get(this.boy), this.x, this.y);
+    ctx.drawImage(Resources.get(this.char), this.x, this.y);
 }
 
 Player.prototype.handleInput = function(str){
     if(str === "left"){
-        this.x = this.x - 101;
+        this.x -= 101;
     }
     else if(str === "up"){
-        this.y = this.y - 78;
+        this.y -= 78;
     }
     else if(str === "right"){
-        this.x = this.x + 101;
+        this.x += 101;
     }
     else if (str === "down"){
-        this.y = this.y + 78;
+        this.y += 78;
     }
 
 }
@@ -124,6 +126,57 @@ Gems.prototype.render = function(){
     $('h1').text("Points: " + this.points); 
 }
 
+var Selectors = function(){
+    this.selector = 'images/Selector.png';
+    this.x = 0;
+    this.finish = false;
+}
+
+Selectors.prototype.update = function(){
+    if(this.x <= 0){
+        this.x = 0;
+    }else if(this.x >= 404){
+        this.x = 404;
+    }
+}
+
+Selectors.prototype.render = function(){
+    ctx.drawImage(Resources.get(this.selector), this.x, 204);
+}
+
+Selectors.prototype.handleInput = function(str){
+    if(this.finish === false){
+        if (str === "left") {
+            this.x -= 101;
+        }
+        else if (str === "right") {
+            this.x += 101;
+        }
+        else if (str === "enter"){
+            this.selectchar();
+            this.finish = true;
+        }
+    }
+}
+
+Selectors.prototype.selectchar = function(){
+    if(this.x === 0){
+        player.char = 'images/char-boy.png';
+    }
+    else if(this.x === 101){
+        player.char = 'images/char-cat-girl.png';
+    }
+    else if(this.x === 202){
+        player.char = 'images/char-horn-girl.png';
+    }
+    else if(this.x === 303){
+        player.char = 'images/char-pink-girl.png';
+    }
+    else if(this.x === 404){
+        player.char = 'images/char-princess-girl.png';
+    }
+}
+
 // Now instantiate your objects.
 // Place all enemy objects in an array called allEnemies
 // Place the player object in a variable called player
@@ -135,6 +188,7 @@ var enemy5 = new Enemy();
 var player = new Player();
 var allEnemies = [];
 var gem = new Gems();
+var selector = new Selectors();
 allEnemies.push(enemy1);
 allEnemies.push(enemy2);
 allEnemies.push(enemy3);
@@ -145,11 +199,13 @@ allEnemies.push(enemy5);
 // Player.handleInput() method. You don't need to modify this.
 document.addEventListener('keyup', function(e) {
     var allowedKeys = {
+        13: 'enter',
         37: 'left',
         38: 'up',
         39: 'right',
         40: 'down'
     };
 
+    selector.handleInput(allowedKeys[e.keyCode]);
     player.handleInput(allowedKeys[e.keyCode]);
 });
