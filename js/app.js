@@ -12,7 +12,7 @@ var Enemy = function() {
     // a helper we've provided to easily load images
     this.sprite = 'images/enemy-bug.png';
     this.x = -101 - getRandomInt(100, 1000);
-    this.y = 70 * getRandomInt(1, 3);
+    this.y = 70 * getRandomInt(2, 4);
     this.speed = getRandomInt(100, 500);
 }
 
@@ -27,7 +27,7 @@ Enemy.prototype.update = function(dt) {
         this.x += this.speed * dt;
     }else if(this.x > 505){
         this.x = -101 - getRandomInt(100, 1000);
-        this.y = 70 * getRandomInt(1, 3);
+        this.y = 70 * getRandomInt(2, 4);
         this.speed = getRandomInt(100, 500);
     }
 }
@@ -44,6 +44,7 @@ var Player = function(){
     this.char;
     this.x;
     this.y;
+    
 }
 
 Player.prototype.update = function(){
@@ -53,10 +54,10 @@ Player.prototype.update = function(){
         this.x = 404;
     }
 
-    if(this.y <= -12){
-        this.y = -12;
-    }else if(this.y >= 378){
-        this.y = 378;
+    if(this.y <= 66){
+        this.y = 66;
+    }else if(this.y >= 456){
+        this.y = 456;
     }
 }
 
@@ -83,7 +84,7 @@ Player.prototype.handleInput = function(str){
 var Gems = function(){
     this.gem = this.getRandoimg();
     this.x = 101 * getRandomInt(0, 4);
-    this.y = 70 * getRandomInt(1, 3);
+    this.y = 70 * getRandomInt(2, 4);
     this.points = 0;
 }
 
@@ -117,7 +118,7 @@ Gems.prototype.update = function(){
         this.updatepts();
         this.gem = this.getRandoimg();
         this.x = 101 * getRandomInt(0, 4);
-        this.y = 70 * getRandomInt(1, 3);
+        this.y = 70 * getRandomInt(2, 4);
     }
 }
 
