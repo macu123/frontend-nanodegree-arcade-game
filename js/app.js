@@ -46,20 +46,32 @@ var Player = function(){
     this.y;
     this.life = 5;
     this.heart = 'images/Heart.png';
+    this.up_float = true;
 }
 
-Player.prototype.update = function(){
-    if(this.x <= 0){
-        this.x = 0;
-    }else if(this.x >= 404){
-        this.x = 404;
+Player.prototype.update = function(dt){
+    if (this.y < 144) {
+        
+        this.float(dt);
+    }
+}
+
+Player.prototype.float = function(dt){
+    if (this.y >= 40) {
+        this.up_float = true;
+    }
+    else if (this.y <= 6) {
+        this.up_float = false;
     }
 
-    if(this.y <= 66){
-        this.y = 66;
-    }else if(this.y >= 456){
-        this.y = 456;
+    if (this.up_float === true){
+        this.y -= 30*dt;
     }
+    else if (this.up_float === false){
+        this.y += 30*dt;
+    }
+    //console.log("player.y: " + this.y);
+    console.log("dt: " + dt);
 }
 
 Player.prototype.render = function(){
@@ -71,17 +83,27 @@ Player.prototype.render = function(){
 
 Player.prototype.handleInput = function(str){
      if(this.life >= 1){   
-        if(str === "left"){
+        if(str === "left" && this.x >= 101){
             this.x -= 101;
         }
-        else if(str === "up"){
-        this.y -= 78;
+        else if(str === "up" && this.y >= 144){
+            if(this.y === 144){
+                this.y = 23;
+            }
+            else {
+                this.y -= 78;
+            }
         }
-        else if(str === "right"){
+        else if(str === "right" && this.x <= 303){
             this.x += 101;
         }
-        else if (str === "down"){
-            this.y += 78;
+        else if (str === "down" && this.y <= 378){
+            if(this.y < 144){
+                this.y = 144;
+            }
+            else{
+                this.y += 78;
+            }
         }
     }
     else{
@@ -89,7 +111,6 @@ Player.prototype.handleInput = function(str){
             this.life = 6;
         }
     }
-
 }
 
 var Gems = function(){
@@ -197,7 +218,7 @@ var Texts_end = function(){
 }
 
 Texts_end.prototype.update = function(dt){
-    if(this.y <= 200){
+    if(this.y <= 300){
         this.up = false;
     }else if(this.y >= 600){
         this.up = true;

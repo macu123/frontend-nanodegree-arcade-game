@@ -46,11 +46,13 @@ var Engine = (function(global) {
         /* Call our update/render functions, pass along the time delta to
          * our update function since it may be used for smooth animation.
          */
+         //update as long as players have one life at least
         if(player.life >= 1){
             update(dt);
         }
         render();
 
+        //if players have no life, go to 'Game Over' screen
         if(player.life <= 0){
             end_game(dt);
         }
@@ -117,8 +119,7 @@ var Engine = (function(global) {
         allEnemies.forEach(function(enemy) {
             enemy.update(dt);
         });
-
-        player.update();
+        player.update(dt);
         gem.update();
     }
 
@@ -158,7 +159,17 @@ var Engine = (function(global) {
                  * so that we get the benefits of caching these images, since
                  * we're using them over and over.
                  */
+                if(row === 1 && col === 0){
+                    ctx.globalAlpha = 0.6;
+                }
                 ctx.drawImage(Resources.get(rowImages[row]), col * 101, row * 83);
+                if(row === 1 && col === numCols - 1){
+                    ctx.globalAlpha = 1.0;
+                }
+    
+                if(player.y < 144 && row === 0){
+                    player.render();
+                }
             }
         }
         
@@ -179,7 +190,9 @@ var Engine = (function(global) {
             enemy.render();
         });
 
-        player.render();
+        if (player.y >= 144){
+            player.render();
+        }
     }
 
     /* This function does nothing but it could have been a good place to
@@ -188,12 +201,7 @@ var Engine = (function(global) {
      */
     function reset() {
         // noop
-        /*if(finish === true){
-            black_white = true;
-            render();
-            black_white = false;
-            
-        }*/
+        
         player.x = 202;
         player.y = 378;
         gem.points = 0;
