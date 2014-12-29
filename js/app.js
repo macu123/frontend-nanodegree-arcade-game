@@ -1,10 +1,9 @@
-
 var getRandomInt = function(min, max){
     return Math.floor(Math.random()*(max-min+1)) + min;
 }
 
 // Enemies our player must avoid
-var Enemy = function() {
+var Enemy = function(){
     // Variables applied to each of our instances go here,
     // we've provided one for you to get started
 
@@ -18,14 +17,15 @@ var Enemy = function() {
 
 // Update the enemy's position, required method for game
 // Parameter: dt, a time delta between ticks
-Enemy.prototype.update = function(dt) {
+Enemy.prototype.update = function(dt){
     // You should multiply any movement by the dt parameter
     // which will ensure the game runs at the same speed for
     // all computers.
     
-    if(this.x <= 505){
+    if (this.x <= 505) {
         this.x += this.speed * dt;
-    }else if(this.x > 505){
+    }
+    else if (this.x > 505) {
         this.x = -101 - getRandomInt(100, 1000);
         this.y = 70 * getRandomInt(2, 4);
         this.speed = getRandomInt(100, 500);
@@ -33,7 +33,7 @@ Enemy.prototype.update = function(dt) {
 }
 
 // Draw the enemy on the screen, required method for game
-Enemy.prototype.render = function() {
+Enemy.prototype.render = function(){
     ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
 }
 
@@ -47,67 +47,71 @@ var Player = function(){
     this.life = 5;
     this.heart = 'images/Heart.png';
     this.up_float = true;
+    this.len_above_water = 90;
 }
 
 Player.prototype.update = function(dt){
     if (this.y < 144) {
-        
-        this.float(dt);
+        if (this.len_above_water <= 80) {
+            this.up_float = true;
+        }
+        else if (this.len_above_water >= 100) {
+            this.up_float = false;
+        }
+
+        if (this.up_float === true && this.len_above_water + 15*dt <= 171) {
+            this.len_above_water += 15*dt;
+            this.y -= 15*dt;
+        }
+        else if (this.up_float === false && this.len_above_water - 15*dt >= 0) {
+            this.len_above_water -= 15*dt;
+            this.y += 15*dt;
+        }
     }
 }
 
-Player.prototype.float = function(dt){
-    if (this.y >= 40) {
-        this.up_float = true;
-    }
-    else if (this.y <= 6) {
-        this.up_float = false;
-    }
-
-    if (this.up_float === true){
-        this.y -= 30*dt;
-    }
-    else if (this.up_float === false){
-        this.y += 30*dt;
-    }
-    //console.log("player.y: " + this.y);
-    console.log("dt: " + dt);
+Player.prototype.render_float = function(){
+    ctx.drawImage(Resources.get(this.char), 0, this.len_above_water, Resources.get(this.char).width, 171 - this.len_above_water, this.x, this.y + this.len_above_water, Resources.get(this.char).width, 171 - this.len_above_water);
 }
 
 Player.prototype.render = function(){
-    ctx.drawImage(Resources.get(this.char), this.x, this.y);
-    for(var i=0; i<this.life; i++){
+    if (this.y < 144) {
+        ctx.drawImage(Resources.get(this.char), 0, 0, Resources.get(this.char).width, this.len_above_water, this.x, this.y, Resources.get(this.char).width, this.len_above_water);
+        
+    }
+    else if (this.y >= 144) {
+        ctx.drawImage(Resources.get(this.char), this.x, this.y);
+    }
+    
+    for (var i=0; i<this.life; i++) {
         ctx.drawImage(Resources.get(this.heart), this.x + i*23, this.y + 10);
     }
 }
 
 Player.prototype.handleInput = function(str){
-     if(this.life >= 1){   
-        if(str === "left" && this.x >= 101){
+     if (this.life >= 1) {   
+        if (str === "left" && this.x >= 101) {
             this.x -= 101;
         }
-        else if(str === "up" && this.y >= 144){
-            if(this.y === 144){
-                this.y = 23;
-            }
-            else {
-                this.y -= 78;
-            }
+        else if (str === "up" && this.y >= 144) {
+            this.y -= 78;
         }
-        else if(str === "right" && this.x <= 303){
+        else if (str === "right" && this.x <= 303) {
             this.x += 101;
         }
-        else if (str === "down" && this.y <= 378){
-            if(this.y < 144){
-                this.y = 144;
-            }
-            else{
+        else if (str === "down" && this.y <= 378) {
+            if (this.y >= 144) {
                 this.y += 78;
+            }
+            else if (this.y < 144) {
+                this.y = 144;
+                this.len_above_water = 90;
+                this.up_float = true;
             }
         }
     }
-    else{
-        if(str === "enter"){
+    else if (this.life < 1) {
+        if (str === "enter") {
             this.life = 6;
         }
     }
@@ -121,32 +125,32 @@ var Gems = function(){
 }
 
 Gems.prototype.getRandoimg = function(){
-    var num = getRandomInt(1, 3);
-    if (num === 1) {
-        return 'images/Gem Blue.png';
+    switch(getRandomInt(1, 3)) {
+        case 1:
+            return 'images/Gem Blue.png';
+        case 2:
+            return 'images/Gem Green.png';
+        case 3:
+            return 'images/Gem Orange.png';
+        }
     }
-    else if(num === 2){
-        return 'images/Gem Green.png';
-    }
-    else if(num === 3){
-        return 'images/Gem Orange.png';
-    }
-}
 
 Gems.prototype.updatepts = function(){
-    if(this.gem === 'images/Gem Blue.png'){
-        this.points += 5;
+    switch(this.gem) {
+        case 'images/Gem Blue.png':
+                                this.points += 5;
+                                break;
+        case 'images/Gem Green.png':
+                                this.points += 10;
+                                break;
+        case 'images/Gem Orange.png':
+                                this.points += 15;
+                                break;
+        }
     }
-    else if (this.gem === 'images/Gem Green.png') {
-        this.points += 10;
-    }
-    else if(this.gem === 'images/Gem Orange.png'){
-        this.points += 15;
-    }
-}
 
 Gems.prototype.update = function(){
-    if((player.x >= this.x-50.5) && (player.x <= this.x+50.5) && (player.y >= this.y-37.5) && (player.y <= this.y+37.5)){
+    if ((player.x >= this.x-50.5) && (player.x <= this.x+50.5) && (player.y >= this.y-37.5) && (player.y <= this.y+37.5)) {
         this.updatepts();
         this.gem = this.getRandoimg();
         this.x = 101 * getRandomInt(0, 4);
@@ -167,9 +171,10 @@ var Selectors = function(){
 }
 
 Selectors.prototype.update = function(){
-    if(this.x <= 0){
+    if (this.x <= 0) {
         this.x = 0;
-    }else if(this.x >= 404){
+    }
+    else if (this.x >= 404) {
         this.x = 404;
     }
 }
@@ -179,54 +184,60 @@ Selectors.prototype.render = function(){
 }
 
 Selectors.prototype.handleInput = function(str){
-    if(this.finish === false){
-        if (str === "left") {
-            this.x -= 101;
-        }
-        else if (str === "right") {
-            this.x += 101;
-        }
-        else if (str === "enter"){
-            this.selectchar();
-            this.finish = true;
+    if (this.finish === false) {
+        switch(str) {
+            case 'left': 
+                this.x -= 101;
+                break;
+            case 'right':
+                this.x += 101;
+                break;
+            case 'enter':
+                this.selectchar();
+                this.finish = true;
+                break;
+            }
         }
     }
-}
 
 Selectors.prototype.selectchar = function(){
-    if(this.x === 0){
-        player.char = 'images/char-boy.png';
+    switch(this.x) {
+        case 0:
+            player.char = 'images/char-boy.png';
+            break;
+        case 101:
+            player.char = 'images/char-cat-girl.png';
+            break;
+        case 202:
+            player.char = 'images/char-horn-girl.png';
+            break;
+        case 303:
+            player.char = 'images/char-pink-girl.png';
+            break;
+        case 404:
+            player.char = 'images/char-princess-girl.png';
+            break;
+        }
     }
-    else if(this.x === 101){
-        player.char = 'images/char-cat-girl.png';
-    }
-    else if(this.x === 202){
-        player.char = 'images/char-horn-girl.png';
-    }
-    else if(this.x === 303){
-        player.char = 'images/char-pink-girl.png';
-    }
-    else if(this.x === 404){
-        player.char = 'images/char-princess-girl.png';
-    }
-}
 
 var Texts_end = function(){
     this.x = 252.5;
     this.y = 350;
-    this.up = true;
+    this.if_goup = true;
 }
 
 Texts_end.prototype.update = function(dt){
-    if(this.y <= 300){
-        this.up = false;
-    }else if(this.y >= 600){
-        this.up = true;
+    if (this.y <= 300) {
+        this.if_goup = false;
+    }
+    else if (this.y >= 600) {
+        this.if_goup = true;
     }
 
-    if(this.up === true){
+    if (this.if_goup === true) {
         this.y -= 200*dt;
-    }else{
+    }
+    else if (this.if_goup === false) {
         this.y += 200*dt;
     }
 }

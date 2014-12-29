@@ -47,13 +47,13 @@ var Engine = (function(global) {
          * our update function since it may be used for smooth animation.
          */
          //update as long as players have one life at least
-        if(player.life >= 1){
+        if (player.life >= 1) {
             update(dt);
         }
         render();
 
         //if players have no life, go to 'Game Over' screen
-        if(player.life <= 0){
+        if (player.life <= 0) {
             end_game(dt);
         }
         
@@ -99,9 +99,9 @@ var Engine = (function(global) {
 
     function checkCollisions(){
         allEnemies.forEach(function(enemy){
-            if((enemy.x >= player.x-50.5) && (enemy.x <= player.x+50.5) && (enemy.y >= player.y-37.5) && (enemy.y <= player.y+37.5)){
+            if ((enemy.x >= player.x-50.5) && (enemy.x <= player.x+50.5) && (enemy.y >= player.y-37.5) && (enemy.y <= player.y+37.5)) {
                 player.life -= 1;
-                if(player.life >= 1){
+                if (player.life >= 1) {
                     reset();
                 }
             }
@@ -150,7 +150,15 @@ var Engine = (function(global) {
          * and, using the rowImages array, draw the correct image for that
          * portion of the "grid"
          */
-        for (row = 0; row < numRows; row++) {
+        for (col = 0; col < numCols; col++) {
+            ctx.drawImage(Resources.get(rowImages[0]), col * 101, 0);
+        }
+
+        if (player.y < 144) {
+            player.render_float();
+        }
+
+        for (row = 1; row < numRows; row++) {
             for (col = 0; col < numCols; col++) {
                 /* The drawImage function of the canvas' context element
                  * requires 3 parameters: the image to draw, the x coordinate
@@ -159,16 +167,12 @@ var Engine = (function(global) {
                  * so that we get the benefits of caching these images, since
                  * we're using them over and over.
                  */
-                if(row === 1 && col === 0){
+                if (row === 1 && col === 0) {
                     ctx.globalAlpha = 0.6;
                 }
                 ctx.drawImage(Resources.get(rowImages[row]), col * 101, row * 83);
-                if(row === 1 && col === numCols - 1){
+                if (row === 1 && col === numCols - 1) {
                     ctx.globalAlpha = 1.0;
-                }
-    
-                if(player.y < 144 && row === 0){
-                    player.render();
                 }
             }
         }
@@ -190,9 +194,7 @@ var Engine = (function(global) {
             enemy.render();
         });
 
-        if (player.y >= 144){
-            player.render();
-        }
+        player.render();
     }
 
     /* This function does nothing but it could have been a good place to
@@ -245,13 +247,14 @@ var Engine = (function(global) {
         selector.update();
         selector.render();
 
-        for (col = 0; col < numCols; col++){
+        for (col = 0; col < numCols; col++) {
             ctx.drawImage(Resources.get(charImages[col]), col * 101, 234);
         }
         
-        if(selector.finish === true){
+        if (selector.finish === true) {
             start_game();
-        }else{
+        }
+        else if (selector.finish === false) {
             win.requestAnimationFrame(selectPlayer);
         }
     }
@@ -261,7 +264,7 @@ var Engine = (function(global) {
         text_end.render();
     }
 
-    function makeGrayScale(){
+    /*function makeGrayScale(){
         var r, g, b, a;
         var imageData = ctx.getImageData(0, 0, 505, 606);
         var numPixels = imageData.data.length/4;
@@ -282,7 +285,7 @@ var Engine = (function(global) {
     function makePixelGrayScale(r, g, b, a){
         var y = 0.3*r + 0.59*g + 0.11*b;
         return{r:y, g:y, b:y, a:y};
-    }
+    }*/
 
     /* Go ahead and load all of the images we know we're going to need to
      * draw our game level. Then set init as the callback method, so that when
