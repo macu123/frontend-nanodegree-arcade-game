@@ -1,3 +1,4 @@
+//shared function to get random integer within given range
 var getRandomInt = function(min, max){
     return Math.floor(Math.random()*(max-min+1)) + min;
 }
@@ -9,6 +10,7 @@ var Enemy = function(){
 
     // The image/sprite for our enemies, this uses
     // a helper we've provided to easily load images
+
     this.sprite = 'images/enemy-bug.png';
     this.x = -101 - getRandomInt(100, 1000);
     this.y = 70 * getRandomInt(2, 4);
@@ -22,9 +24,11 @@ Enemy.prototype.update = function(dt){
     // which will ensure the game runs at the same speed for
     // all computers.
     
+    //if enemy is in canvas, make enemy moving
     if (this.x <= 505) {
         this.x += this.speed * dt;
     }
+    //if enemy is out of canvas, reassign x, y coordinates and speed
     else if (this.x > 505) {
         this.x = -101 - getRandomInt(100, 1000);
         this.y = 70 * getRandomInt(2, 4);
@@ -40,83 +44,111 @@ Enemy.prototype.render = function(){
 // Now write your own player class
 // This class requires an update(), render() and
 // a handleInput() method.
+
 var Player = function(){
-    this.char;
+    this.char; //the character image of the player
     this.x;
     this.y;
-    this.life = 5;
-    this.heart = 'images/Heart.png';
-    this.up_float = true;
-    this.len_above_water = 90;
+    this.life = 5; //the number of lives the player has
+    this.heart = 'images/Heart.png'; //the heart image
+    this.float_up = true; //indicate if player float up when in the water
+    this.hei_above_water = 90; //the height of image above the water.
 }
 
+//if player is in the water, simulate player floating effect
 Player.prototype.update = function(dt){
     if (this.y < 144) {
-        if (this.len_above_water <= 80) {
-            this.up_float = true;
+        if (this.hei_above_water <= 80) {
+            this.float_up = true;
         }
-        else if (this.len_above_water >= 100) {
-            this.up_float = false;
+        else if (this.hei_above_water >= 100) {
+            this.float_up = false;
         }
 
-        if (this.up_float === true && this.len_above_water + 15*dt <= 171) {
-            this.len_above_water += 15*dt;
+        if (this.float_up === true && this.hei_above_water + 15*dt <= 171) {
+            this.hei_above_water += 15*dt;
             this.y -= 15*dt;
         }
-        else if (this.up_float === false && this.len_above_water - 15*dt >= 0) {
-            this.len_above_water -= 15*dt;
+        else if (this.float_up === false && this.hei_above_water - 15*dt >= 0) {
+            this.hei_above_water -= 15*dt;
             this.y += 15*dt;
         }
     }
 }
 
-Player.prototype.render_float = function(){
-    ctx.drawImage(Resources.get(this.char), 0, this.len_above_water, Resources.get(this.char).width, 171 - this.len_above_water, this.x, this.y + this.len_above_water, Resources.get(this.char).width, 171 - this.len_above_water);
+// Draw the part of player below the water on the screen, required method for game
+Player.prototype.render_below_water = function(){
+    ctx.drawImage(
+        Resources.get(this.char),
+        0,
+        this.hei_above_water,
+        Resources.get(this.char).width,
+        171 - this.hei_above_water,
+        this.x,
+        this.y + this.hei_above_water,
+        Resources.get(this.char).width,
+        171 - this.hei_above_water
+        );
 }
 
+// Draw the player on the screen, required method for game
 Player.prototype.render = function(){
+    //if the player is in the water, draw the part of player above the water
     if (this.y < 144) {
-        ctx.drawImage(Resources.get(this.char), 0, 0, Resources.get(this.char).width, this.len_above_water, this.x, this.y, Resources.get(this.char).width, this.len_above_water);
-        
+        ctx.drawImage(
+            Resources.get(this.char),
+            0,
+            0,
+            Resources.get(this.char).width,
+            this.hei_above_water,
+            this.x,
+            this.y,
+            Resources.get(this.char).width,
+            this.hei_above_water
+            );
     }
     else if (this.y >= 144) {
         ctx.drawImage(Resources.get(this.char), this.x, this.y);
     }
-    
+    //draw hearts above the player
     for (var i=0; i<this.life; i++) {
         ctx.drawImage(Resources.get(this.heart), this.x + i*23, this.y + 10);
     }
 }
 
+//Handle inputs for player
 Player.prototype.handleInput = function(str){
-     if (this.life >= 1) {   
-        if (str === "left" && this.x >= 101) {
+    //if player has at least one life, move player according to input
+    if (this.life >= 1) {   
+        if (str === 'left' && this.x >= 101) {
             this.x -= 101;
         }
-        else if (str === "up" && this.y >= 144) {
+        else if (str === 'up' && this.y >= 144) {
             this.y -= 78;
         }
-        else if (str === "right" && this.x <= 303) {
+        else if (str === 'right' && this.x <= 303) {
             this.x += 101;
         }
-        else if (str === "down" && this.y <= 378) {
+        else if (str === 'down' && this.y <= 378) {
             if (this.y >= 144) {
                 this.y += 78;
             }
             else if (this.y < 144) {
                 this.y = 144;
-                this.len_above_water = 90;
-                this.up_float = true;
+                this.hei_above_water = 90;
+                this.float_up = true;
             }
         }
     }
+    //if player has no life, press 'enter' to restore lives
     else if (this.life < 1) {
-        if (str === "enter") {
+        if (str === 'enter') {
             this.life = 6;
         }
     }
 }
 
+//Gems player can pick up to receive points
 var Gems = function(){
     this.gem = this.getRandoimg();
     this.x = 101 * getRandomInt(0, 4);
@@ -124,6 +156,7 @@ var Gems = function(){
     this.points = 0;
 }
 
+//Get random image for Gems
 Gems.prototype.getRandoimg = function(){
     switch(getRandomInt(1, 3)) {
         case 1:
@@ -135,6 +168,7 @@ Gems.prototype.getRandoimg = function(){
         }
     }
 
+//Update points for Gems
 Gems.prototype.updatepts = function(){
     switch(this.gem) {
         case 'images/Gem Blue.png':
@@ -149,57 +183,55 @@ Gems.prototype.updatepts = function(){
         }
     }
 
+//Update the position of gems after it's pick up
 Gems.prototype.update = function(){
-    if ((player.x >= this.x-50.5) && (player.x <= this.x+50.5) && (player.y >= this.y-37.5) && (player.y <= this.y+37.5)) {
-        this.updatepts();
-        this.gem = this.getRandoimg();
-        this.x = 101 * getRandomInt(0, 4);
-        this.y = 70 * getRandomInt(2, 4);
+    if ((player.x >= this.x-50.5) && 
+        (player.x <= this.x+50.5) && 
+        (player.y >= this.y-37.5) && 
+        (player.y <= this.y+37.5)) {
+            this.updatepts();
+            this.gem = this.getRandoimg();
+            this.x = 101 * getRandomInt(0, 4);
+            this.y = 70 * getRandomInt(2, 4);
     }
 }
 
+//Draw points and gems on the screen
 Gems.prototype.render = function(){
-    ctx.font = "30px Arial";
-    ctx.fillText("Points: " + this.points, 350, 80);
+    ctx.font = '30px Arial';
+    ctx.fillText('Points: ' + this.points, 350, 80);
     ctx.drawImage(Resources.get(this.gem), this.x, this.y);
 }
 
+//Selection arrow on the player selection screen
 var Selectors = function(){
     this.selector = 'images/Selector.png';
     this.x = 0;
     this.finish = false;
 }
 
-Selectors.prototype.update = function(){
-    if (this.x <= 0) {
-        this.x = 0;
-    }
-    else if (this.x >= 404) {
-        this.x = 404;
-    }
-}
-
+//Draw selection arrow on the screen
 Selectors.prototype.render = function(){
     ctx.drawImage(Resources.get(this.selector), this.x, 204);
 }
 
+//Handle inputs for selection arrow
 Selectors.prototype.handleInput = function(str){
     if (this.finish === false) {
-        switch(str) {
-            case 'left': 
-                this.x -= 101;
-                break;
-            case 'right':
-                this.x += 101;
-                break;
-            case 'enter':
-                this.selectchar();
-                this.finish = true;
-                break;
-            }
+        if(str === 'left' && this.x >= 101) {
+            this.x -= 101;
+        }
+        else if (str === 'right' && this.x <= 303) {
+            this.x += 101;
+        }
+        else if (str === 'enter'){
+            this.selectchar();
+            this.finish = true;
         }
     }
+}
 
+//Select the character image of player according to x coordinate of selection arrow
 Selectors.prototype.selectchar = function(){
     switch(this.x) {
         case 0:
@@ -220,33 +252,36 @@ Selectors.prototype.selectchar = function(){
         }
     }
 
+//Texts on the ending screen
 var Texts_end = function(){
     this.x = 252.5;
     this.y = 350;
-    this.if_goup = true;
+    this.go_up = true;
 }
 
+//Simulate texts up and down effect
 Texts_end.prototype.update = function(dt){
     if (this.y <= 300) {
-        this.if_goup = false;
+        this.go_up = false;
     }
     else if (this.y >= 600) {
-        this.if_goup = true;
+        this.go_up = true;
     }
 
-    if (this.if_goup === true) {
+    if (this.go_up === true) {
         this.y -= 200*dt;
     }
-    else if (this.if_goup === false) {
+    else if (this.go_up === false) {
         this.y += 200*dt;
     }
 }
 
+//Draw texts on the ending screen
 Texts_end.prototype.render = function(){
-    ctx.font = "30px Verdana";
-    ctx.textAlign = "center";
-    ctx.fillText("Game Over!", this.x, this.y);
-    ctx.fillText("Please press Enter to restart!", this.x, this.y + 40);
+    ctx.font = '30px Verdana';
+    ctx.textAlign = 'center';
+    ctx.fillText('Game Over!', this.x, this.y);
+    ctx.fillText('Please press Enter to restart!', this.x, this.y + 40);
 }
 
 // Now instantiate your objects.
@@ -269,7 +304,7 @@ allEnemies.push(enemy4);
 allEnemies.push(enemy5);
 
 // This listens for key presses and sends the keys to your
-// Player.handleInput() method. You don't need to modify this.
+// Selector.handleInput() and Player.handleInput() method. You don't need to modify this.
 document.addEventListener('keyup', function(e) {
     var allowedKeys = {
         13: 'enter',

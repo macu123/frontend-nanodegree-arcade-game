@@ -24,7 +24,6 @@ var Engine = (function(global) {
         canvas = doc.createElement('canvas'),
         ctx = canvas.getContext('2d'),
         lastTime;
-        black_white = false;
 
     canvas.width = 505;
     canvas.height = 700;
@@ -69,14 +68,14 @@ var Engine = (function(global) {
         win.requestAnimationFrame(main);
     }
 
+    function init() {
+        PlayerSelection();   
+    }
+
     /* This function does some initial setup that should only occur once,
      * particularly setting the lastTime variable that is required for the
      * game loop.
      */
-    function init() {
-        selectPlayer();   
-    }
-
     function start_game(){
         reset();
         lastTime = Date.now();
@@ -97,15 +96,19 @@ var Engine = (function(global) {
         checkCollisions();
     }
 
+    //This function check if any enemy collide with player. If yes, reduce player's life by one
     function checkCollisions(){
         allEnemies.forEach(function(enemy){
-            if ((enemy.x >= player.x-50.5) && (enemy.x <= player.x+50.5) && (enemy.y >= player.y-37.5) && (enemy.y <= player.y+37.5)) {
-                player.life -= 1;
-                if (player.life >= 1) {
-                    reset();
+            if ((enemy.x >= player.x-50.5) &&
+                (enemy.x <= player.x+50.5) &&
+                (enemy.y >= player.y-37.5) &&
+                (enemy.y <= player.y+37.5)) {
+                    player.life -= 1;
+                    if (player.life >= 1) {
+                        reset();
+                    }
                 }
-            }
-        });
+            });
     }
 
     /* This is called by the update function  and loops through all of the
@@ -146,18 +149,18 @@ var Engine = (function(global) {
             numCols = 5,
             row, col;
 
+        //Draw all images for the first row
+        for (col = 0; col < numCols; col++) {
+            ctx.drawImage(Resources.get(rowImages[0]), col * 101, 0);
+        }
+        //If player is in the water, draw the part of player below the water
+        if (player.y < 144) {
+            player.render_below_water();
+        }
         /* Loop through the number of rows and columns we've defined above
          * and, using the rowImages array, draw the correct image for that
          * portion of the "grid"
          */
-        for (col = 0; col < numCols; col++) {
-            ctx.drawImage(Resources.get(rowImages[0]), col * 101, 0);
-        }
-
-        if (player.y < 144) {
-            player.render_float();
-        }
-
         for (row = 1; row < numRows; row++) {
             for (col = 0; col < numCols; col++) {
                 /* The drawImage function of the canvas' context element
@@ -167,6 +170,7 @@ var Engine = (function(global) {
                  * so that we get the benefits of caching these images, since
                  * we're using them over and over.
                  */
+                //Draw all transparent water images for the second row
                 if (row === 1 && col === 0) {
                     ctx.globalAlpha = 0.6;
                 }
@@ -185,11 +189,11 @@ var Engine = (function(global) {
      * on your enemy and player entities within app.js
      */
     function renderEntities() {
+        gem.render();
+
         /* Loop through all of the objects within the allEnemies array and call
          * the render function you have defined.
          */
-        gem.render();
-
         allEnemies.forEach(function(enemy) {
             enemy.render();
         });
@@ -199,7 +203,7 @@ var Engine = (function(global) {
 
     /* This function does nothing but it could have been a good place to
      * handle game reset states - maybe a new game menu or a game over screen
-     * those sorts of things. It's only called once by the init() method.
+     * those sorts of things.
      */
     function reset() {
         // noop
@@ -210,7 +214,8 @@ var Engine = (function(global) {
 
     }
 
-    function selectPlayer(){
+    //Player Selection screen
+    function PlayerSelection(){
         var rowImages = [
             'images/blank.png',      //Row of blank
             'images/stone-block.png'   // Row of stone
@@ -244,21 +249,24 @@ var Engine = (function(global) {
             }
         }
 
-        selector.update();
+        //Draw selection arrow on the screen
         selector.render();
 
+        //Draw all the characters images
         for (col = 0; col < numCols; col++) {
             ctx.drawImage(Resources.get(charImages[col]), col * 101, 234);
         }
         
+        //if the character is chosen, start the game
         if (selector.finish === true) {
             start_game();
         }
         else if (selector.finish === false) {
-            win.requestAnimationFrame(selectPlayer);
+            win.requestAnimationFrame(PlayerSelection);
         }
     }
 
+    //This function makes texts up and down on the screen
     function end_game(dt){
         text_end.update(dt);
         text_end.render();
