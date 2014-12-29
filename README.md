@@ -4,7 +4,7 @@ Instructions for Play<br>
 1. Go to http://macu123.github.io/frontend-nanodegree-arcade-game/ using modern HTML5 compliant browser.<br>
 2. Play and enjoy!
 
-What Should I Do ?
+What Should I Do ?<br>
 1. You will go to Character Selection Screen when open the game first
    time. Then use LEFT and RIGHT arraw keys to move the selection arrow.When you are done, press ENTER to select your character.<br>
 2. After you finish player selection, the game will start. Use UP,
