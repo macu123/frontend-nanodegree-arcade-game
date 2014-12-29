@@ -14,4 +14,6 @@ What Should I Do ?<br>
 4. There are three kinds of gems appearing randomly. Every gem has its
    own points. Blue Gem has five points, Green Gem has ten points ,and Orange Gem has fifteen points.<br>
 5. If your character touches bugs, your character will lose one life,
-   which is indicated by the numbers of heart above. And you will lose all points for gems. Every character has five lives at the beginning.The game is over when your character has no life at all.
+   which is indicated by the number of hearts above. The character will be pushed back to the original place. At the same time, you will lose all points you have already get. Every character has five lives initially. The game is over when your character has no life at all.
+   <br>
+6. When game is over, you can press Enter to restart the game.
