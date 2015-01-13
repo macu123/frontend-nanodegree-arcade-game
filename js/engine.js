@@ -76,7 +76,7 @@ var Engine = (function(global) {
      * particularly setting the lastTime variable that is required for the
      * game loop.
      */
-    function start_game(){
+    function start_game() {
         reset();
         lastTime = Date.now();
         main();
@@ -97,8 +97,8 @@ var Engine = (function(global) {
     }
 
     //This function check if any enemy collide with player. If yes, reduce player's life by one
-    function checkCollisions(){
-        allEnemies.forEach(function(enemy){
+    function checkCollisions() {
+        allEnemies.forEach(function(enemy) {
             if ((enemy.x >= player.x-50.5) &&
                 (enemy.x <= player.x+50.5) &&
                 (enemy.y >= player.y-37.5) &&
@@ -215,10 +215,10 @@ var Engine = (function(global) {
     }
 
     //Player Selection screen
-    function PlayerSelection(){
+    function PlayerSelection() {
         var rowImages = [
-            'images/blank.png',      //Row of blank
-            'images/stone-block.png'   // Row of stone
+                'images/blank.png',      //Row of blank
+                'images/stone-block.png'   // Row of stone
             ],
             charImages = [
                 'images/char-boy.png',
@@ -267,33 +267,10 @@ var Engine = (function(global) {
     }
 
     //This function makes texts up and down on the screen
-    function end_game(dt){
+    function end_game(dt) {
         text_end.update(dt);
         text_end.render();
     }
-
-    /*function makeGrayScale(){
-        var r, g, b, a;
-        var imageData = ctx.getImageData(0, 0, 505, 606);
-        var numPixels = imageData.data.length/4;
-        for (var i = 0; i < numPixels; i++){
-            r = imageData.data[i*4 + 0];
-            g = imageData.data[i*4 + 1];
-            b = imageData.data[i*4 + 2];
-            a = imageData.data[i*4 + 3];
-            pixel = makePixelGrayScale(r, g, b, a);
-            imageData.data[i*4 + 0] = pixel.r;
-            imageData.data[i*4 + 1] = pixel.g;
-            imageData.data[i*4 + 2] = pixel.b;
-            imageData.data[i*4 + 3] = pixel.a;
-        }
-        ctx.putImageData(imageData, 0, 0);
-    }
-
-    function makePixelGrayScale(r, g, b, a){
-        var y = 0.3*r + 0.59*g + 0.11*b;
-        return{r:y, g:y, b:y, a:y};
-    }*/
 
     /* Go ahead and load all of the images we know we're going to need to
      * draw our game level. Then set init as the callback method, so that when
