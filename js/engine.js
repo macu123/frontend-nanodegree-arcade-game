@@ -41,7 +41,6 @@ var Engine = (function(global) {
          */
         var now = Date.now(),
             dt = (now - lastTime) / 1000.0;
-
         /* Call our update/render functions, pass along the time delta to
          * our update function since it may be used for smooth animation.
          */
@@ -53,6 +52,9 @@ var Engine = (function(global) {
 
         //if players have no life, go to 'Game Over' screen
         if (player.life <= 0) {
+            //stop background sound when game over
+            //gameover sound immediatly start after background sound ends
+            backgroundSound.stop();
             end_game(dt);
         }
         
@@ -79,6 +81,8 @@ var Engine = (function(global) {
     function start_game() {
         reset();
         lastTime = Date.now();
+        //Play background music
+        backgroundSound.play(true);
         main();
     }
 
@@ -105,6 +109,8 @@ var Engine = (function(global) {
                 (enemy.y <= player.y+37.5)) {
                     player.life -= 1;
                     if (player.life >= 1) {
+                        //Play sound when player dies
+                        dieSound.play(false);
                         reset();
                     }
                 }

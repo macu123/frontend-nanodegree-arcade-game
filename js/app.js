@@ -119,17 +119,22 @@ Player.prototype.render = function() {
 //Handle inputs for player
 Player.prototype.handleInput = function(str) {
     //if player has at least one life, move player according to input
-    if (this.life >= 1) {   
+    if (this.life >= 1) {
         if (str === 'left' && this.x >= 101) {
+            //play sound when player moves
+            playerMoveSound.play(false);
             this.x -= 101;
         }
         else if (str === 'up' && this.y >= 144) {
+            playerMoveSound.play(false);
             this.y -= 78;
         }
         else if (str === 'right' && this.x <= 303) {
+            playerMoveSound.play(false);
             this.x += 101;
         }
         else if (str === 'down' && this.y <= 378) {
+            playerMoveSound.play(false);
             if (this.y >= 144) {
                 this.y += 78;
             }
@@ -143,6 +148,8 @@ Player.prototype.handleInput = function(str) {
     //if player has no life, press 'enter' to restore lives
     else if (this.life < 1) {
         if (str === 'enter') {
+            //play background sound when game restart
+            backgroundSound.play(true);
             this.life = 6;
         }
     }
@@ -193,6 +200,8 @@ Gems.prototype.update = function() {
             this.gem = this.getRandoimg();
             this.x = 101 * getRandomInt(0, 4);
             this.y = 70 * getRandomInt(2, 4);
+            //play sound when collect Gems
+            getPointSound.play(false);
     }
 };
 
@@ -218,10 +227,13 @@ Selectors.prototype.render = function() {
 //Handle inputs for selection arrow
 Selectors.prototype.handleInput = function(str) {
     if (this.finish === false) {
-        if(str === 'left' && this.x >= 101) {
+        if(str === 'left' && this.x >= 101) {  
+            //play sound when selector moves
+            selectorMoveSound.play(false);
             this.x -= 101;
         }
         else if (str === 'right' && this.x <= 303) {
+            selectorMoveSound.play(false);
             this.x += 101;
         }
         else if (str === 'enter') {
@@ -284,7 +296,60 @@ Texts_end.prototype.render = function() {
     ctx.fillText('Please press Enter to restart!', this.x, this.y + 40);
 };
 
+//From HTML5 Web Audio Quickstart Tutorial
+//This is Sound Object
+var Sound = function(source) {
+    if(!window.audioContext) {
+        audioContext = new AudioContext;
+    }
+    var that = this;
+    that.source = source;
+    that.buffer = null;
+    that.isLoaded = false;
+    that.playSound = null;
+
+    var getSound = new XMLHttpRequest();
+    getSound.open("GET", that.source, true);
+    getSound.responseType = "arraybuffer";
+    getSound.onload = function() {
+        audioContext.decodeAudioData(getSound.response, function(buffer) {
+            that.buffer = buffer;
+            that.isLoaded = true;
+        });
+    };
+    getSound.send();
+};
+
+Sound.prototype.play = function(if_loop) {
+    if(this.isLoaded) {
+        this.playSound = audioContext.createBufferSource();
+        this.playSound.buffer = this.buffer;
+        this.playSound.connect(audioContext.destination);
+        if(if_loop) {
+            this.playSound.loop = true;
+            //event handler fired when the sound ends
+            this.playSound.onended = function() {
+                gameOverSound.play(false);
+            };
+        }
+        this.playSound.start();
+    }
+
+};
+
+Sound.prototype.stop = function() {
+    this.playSound.stop();
+}
+
+
 // Now instantiate your objects.
+//Create audio objects
+var gameOverSound = new Sound("sound/gameover.wav");
+var backgroundSound = new Sound("sound/background.wav");
+var getPointSound = new Sound("sound/getPoint.wav");
+var dieSound = new Sound("sound/die.wav");
+var selectorMoveSound = new Sound("sound/selectorMove.wav");
+var playerMoveSound = new Sound("sound/playerMove.wav");
 // Place all enemy objects in an array called allEnemies
 // Place the player object in a variable called player
 var enemy1 = new Enemy();
