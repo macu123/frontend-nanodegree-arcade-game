@@ -25,11 +25,11 @@ Enemy.prototype.update = function(dt) {
     // all computers.
     
     //if enemy is in canvas, make enemy moving
-    if (this.x <= 505) {
+    if (this.x <= 909) {
         this.x += this.speed * dt;
     }
     //if enemy is out of canvas, reassign x, y coordinates and speed
-    else if (this.x > 505) {
+    else if(this.x > 909) {
         this.x = -101 - getRandomInt(100, 1000);
         this.y = 70 * getRandomInt(2, 4);
         this.speed = getRandomInt(100, 500);
@@ -129,7 +129,7 @@ Player.prototype.handleInput = function(str) {
             playerMoveSound.play(false);
             this.y -= 78;
         }
-        else if (str === 'right' && this.x <= 303) {
+        else if (str === 'right' && this.x <= 707) {
             playerMoveSound.play(false);
             this.x += 101;
         }
@@ -158,7 +158,7 @@ Player.prototype.handleInput = function(str) {
 //Gems player can pick up to receive points
 var Gems = function() {
     this.gem = this.getRandoimg();
-    this.x = 101 * getRandomInt(0, 4);
+    this.x = 101 * getRandomInt(0, 8);
     this.y = 70 * getRandomInt(2, 4);
     this.points = 0;
 };
@@ -198,7 +198,7 @@ Gems.prototype.update = function() {
         (player.y <= this.y+37.5)) {
             this.updatepts();
             this.gem = this.getRandoimg();
-            this.x = 101 * getRandomInt(0, 4);
+            this.x = 101 * getRandomInt(0, 8);
             this.y = 70 * getRandomInt(2, 4);
             //play sound when collect Gems
             getPointSound.play(false);
@@ -208,14 +208,14 @@ Gems.prototype.update = function() {
 //Draw points and gems on the screen
 Gems.prototype.render = function() {
     ctx.font = '30px Arial';
-    ctx.fillText('Points: ' + this.points, 350, 80);
+    ctx.fillText('Points: ' + this.points, 750, 80);
     ctx.drawImage(Resources.get(this.gem), this.x, this.y);
 };
 
 //Selection arrow on the player selection screen
 var Selectors = function() {
     this.selector = 'images/Selector.png';
-    this.x = 0;
+    this.x = 200;
     this.finish = false;
 };
 
@@ -227,12 +227,12 @@ Selectors.prototype.render = function() {
 //Handle inputs for selection arrow
 Selectors.prototype.handleInput = function(str) {
     if (this.finish === false) {
-        if(str === 'left' && this.x >= 101) {  
+        if(str === 'left' && this.x >= 301) {  
             //play sound when selector moves
             selectorMoveSound.play(false);
             this.x -= 101;
         }
-        else if (str === 'right' && this.x <= 303) {
+        else if (str === 'right' && this.x <= 503) {
             selectorMoveSound.play(false);
             this.x += 101;
         }
@@ -246,19 +246,19 @@ Selectors.prototype.handleInput = function(str) {
 //Select the character image of player according to x coordinate of selection arrow
 Selectors.prototype.selectchar = function() {
     switch(this.x) {
-        case 0:
+        case 200:
             player.char = 'images/char-boy.png';
             break;
-        case 101:
+        case 301:
             player.char = 'images/char-cat-girl.png';
             break;
-        case 202:
+        case 402:
             player.char = 'images/char-horn-girl.png';
             break;
-        case 303:
+        case 503:
             player.char = 'images/char-pink-girl.png';
             break;
-        case 404:
+        case 604:
             player.char = 'images/char-princess-girl.png';
             break;
         }
@@ -266,14 +266,14 @@ Selectors.prototype.selectchar = function() {
 
 //Texts on the ending screen
 var Texts_end = function() {
-    this.x = 252.5;
+    this.x = 454.5;
     this.y = 350;
     this.go_up = true;
 };
 
 //Simulate texts up and down effect
 Texts_end.prototype.update = function(dt) {
-    if (this.y <= 300) {
+    if (this.y <= 200) {
         this.go_up = false;
     }
     else if (this.y >= 600) {

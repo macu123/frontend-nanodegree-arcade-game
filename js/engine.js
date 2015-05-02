@@ -25,7 +25,7 @@ var Engine = (function(global) {
         ctx = canvas.getContext('2d'),
         lastTime;
 
-    canvas.width = 505;
+    canvas.width = 909;
     canvas.height = 700;
     doc.body.appendChild(canvas);
 
@@ -152,7 +152,7 @@ var Engine = (function(global) {
                 'images/grass-block.png'    // Row 2 of 2 of grass
             ],
             numRows = 7,
-            numCols = 5,
+            numCols = 9,
             row, col;
 
         //Draw all images for the first row
@@ -251,7 +251,7 @@ var Engine = (function(global) {
                  * so that we get the benefits of caching these images, since
                  * we're using them over and over.
                  */
-                ctx.drawImage(Resources.get(rowImages[row]), col * 101, (row+2) * 83);
+                ctx.drawImage(Resources.get(rowImages[row]), 200 + col * 101, (row+2) * 83);
             }
         }
 
@@ -260,7 +260,7 @@ var Engine = (function(global) {
 
         //Draw all the characters images
         for (col = 0; col < numCols; col++) {
-            ctx.drawImage(Resources.get(charImages[col]), col * 101, 234);
+            ctx.drawImage(Resources.get(charImages[col]), 200 + col * 101, 234);
         }
         
         //if the character is chosen, start the game
