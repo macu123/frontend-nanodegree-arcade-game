@@ -118,7 +118,7 @@ Player.prototype.render = function(ctx, Resources) {
 };
 
 //Handle inputs for player
-Player.prototype.handleInput = function(str) {
+Player.prototype.handleInput = function(str, playerMoveSound, backgroundSound) {
     //if player has at least one life, move player according to input
     if (this.life >= 1) {
         if (str === 'left' && this.x >= 101) {
@@ -192,7 +192,7 @@ Gems.prototype.updatepts = function() {
 };
 
 //Update the position of gems after it's pick up
-Gems.prototype.update = function(getRandomInt) {
+Gems.prototype.update = function(player, getRandomInt, getPointSound) {
     if ((player.x >= this.x-50.5) && 
         (player.x <= this.x+50.5) && 
         (player.y >= this.y-37.5) && 
@@ -226,9 +226,9 @@ Selectors.prototype.render = function(ctx, Resources) {
 };
 
 //Handle inputs for selection arrow
-Selectors.prototype.handleInput = function(str) {
+Selectors.prototype.handleInput = function(str, selectorMoveSound, player) {
     if (this.finish === false) {
-        if(str === 'left' && this.x >= 301) {  
+        if (str === 'left' && this.x >= 301) {  
             //play sound when selector moves
             selectorMoveSound.play(false);
             this.x -= 101;
@@ -238,14 +238,14 @@ Selectors.prototype.handleInput = function(str) {
             this.x += 101;
         }
         else if (str === 'enter') {
-            this.selectchar();
+            this.selectchar(player);
             this.finish = true;
         }
     }
 };
 
 //Select the character image of player according to x coordinate of selection arrow
-Selectors.prototype.selectchar = function() {
+Selectors.prototype.selectchar = function(player) {
     switch(this.x) {
         case 200: {
             player.char = 'images/char-boy.png';
@@ -385,6 +385,6 @@ document.addEventListener('keyup', function(e) {
         40: 'down'
     };
 
-    selector.handleInput(allowedKeys[e.keyCode]);
-    player.handleInput(allowedKeys[e.keyCode]);
+    selector.handleInput(allowedKeys[e.keyCode], selectorMoveSound, player);
+    player.handleInput(allowedKeys[e.keyCode], playerMoveSound, backgroundSound);
 });

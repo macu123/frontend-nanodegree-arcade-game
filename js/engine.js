@@ -129,7 +129,7 @@ var Engine = (function(global) {
             enemy.update(dt, getRandomInt);
         });
         player.update(dt);
-        gem.update(getRandomInt);
+        gem.update(player, getRandomInt, getPointSound);
     }
 
     /* This function initially draws the "game level", it will then call
