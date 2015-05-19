@@ -126,10 +126,10 @@ var Engine = (function(global) {
      */
     function updateEntities(dt) {
         allEnemies.forEach(function(enemy) {
-            enemy.update(dt);
+            enemy.update(dt, getRandomInt);
         });
         player.update(dt);
-        gem.update();
+        gem.update(getRandomInt);
     }
 
     /* This function initially draws the "game level", it will then call

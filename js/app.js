@@ -5,7 +5,7 @@ var getRandomInt = function(min, max) {
 };
 
 // Enemies our player must avoid
-var Enemy = function() {
+var Enemy = function(getRandomInt) {
     // Variables applied to each of our instances go here,
     // we've provided one for you to get started
 
@@ -19,8 +19,8 @@ var Enemy = function() {
 };
 
 // Update the enemy's position, required method for game
-// Parameter: dt, a time delta between ticks
-Enemy.prototype.update = function(dt) {
+// Parameter: dt: a time delta between ticks, getRandomInt: a function to generate random integer
+Enemy.prototype.update = function(dt, getRandomInt) {
     // You should multiply any movement by the dt parameter
     // which will ensure the game runs at the same speed for
     // all computers.
@@ -157,15 +157,15 @@ Player.prototype.handleInput = function(str) {
 };
 
 //Gems player can pick up to receive points
-var Gems = function() {
-    this.gem = this.getRandoimg();
+var Gems = function(getRandomInt) {
+    this.gem = this.getRandomImg(getRandomInt);
     this.x = 101 * getRandomInt(0, 8);
     this.y = 70 * getRandomInt(2, 4);
     this.points = 0;
 };
 
 //Get random image for Gems
-Gems.prototype.getRandoimg = function() {
+Gems.prototype.getRandomImg = function(getRandomInt) {
     switch(getRandomInt(1, 3)) {
         case 1:
             return 'images/Gem Blue.png';
@@ -192,13 +192,13 @@ Gems.prototype.updatepts = function() {
     };
 
 //Update the position of gems after it's pick up
-Gems.prototype.update = function() {
+Gems.prototype.update = function(getRandomInt) {
     if ((player.x >= this.x-50.5) && 
         (player.x <= this.x+50.5) && 
         (player.y >= this.y-37.5) && 
         (player.y <= this.y+37.5)) {
             this.updatepts();
-            this.gem = this.getRandoimg();
+            this.gem = this.getRandomImg(getRandomInt);
             this.x = 101 * getRandomInt(0, 8);
             this.y = 70 * getRandomInt(2, 4);
             //play sound when collect Gems
@@ -353,14 +353,14 @@ var selectorMoveSound = new Sound("sound/selectorMove.wav");
 var playerMoveSound = new Sound("sound/playerMove.wav");
 // Place all enemy objects in an array called allEnemies
 // Place the player object in a variable called player
-var enemy1 = new Enemy();
-var enemy2 = new Enemy();
-var enemy3 = new Enemy();
-var enemy4 = new Enemy();
-var enemy5 = new Enemy();
+var enemy1 = new Enemy(getRandomInt);
+var enemy2 = new Enemy(getRandomInt);
+var enemy3 = new Enemy(getRandomInt);
+var enemy4 = new Enemy(getRandomInt);
+var enemy5 = new Enemy(getRandomInt);
 var player = new Player();
 var allEnemies = [];
-var gem = new Gems();
+var gem = new Gems(getRandomInt);
 var selector = new Selectors();
 var text_end = new Texts_end();
 allEnemies.push(enemy1);
