@@ -167,29 +167,29 @@ var Gems = function(getRandomInt) {
 //Get random image for Gems
 Gems.prototype.getRandomImg = function(getRandomInt) {
     switch(getRandomInt(1, 3)) {
-        case 1:
-            return 'images/Gem Blue.png';
-        case 2:
-            return 'images/Gem Green.png';
-        case 3:
-            return 'images/Gem Orange.png';
-        }
-    };
+        case 1: return 'images/Gem Blue.png';
+        case 2: return 'images/Gem Green.png';
+        case 3: return 'images/Gem Orange.png';
+    }
+};
 
 //Update points for Gems
 Gems.prototype.updatepts = function() {
     switch(this.gem) {
-        case 'images/Gem Blue.png':
+        case 'images/Gem Blue.png': {
             this.points += 5;
             break;
-        case 'images/Gem Green.png':
+        }
+        case 'images/Gem Green.png': {
             this.points += 10;
             break;
-        case 'images/Gem Orange.png':
+        }
+        case 'images/Gem Orange.png': {
             this.points += 15;
             break;
         }
-    };
+    }
+};
 
 //Update the position of gems after it's pick up
 Gems.prototype.update = function(getRandomInt) {
@@ -247,23 +247,28 @@ Selectors.prototype.handleInput = function(str) {
 //Select the character image of player according to x coordinate of selection arrow
 Selectors.prototype.selectchar = function() {
     switch(this.x) {
-        case 200:
+        case 200: {
             player.char = 'images/char-boy.png';
             break;
-        case 301:
+        }
+        case 301: {
             player.char = 'images/char-cat-girl.png';
             break;
-        case 402:
+        }
+        case 402: {
             player.char = 'images/char-horn-girl.png';
             break;
-        case 503:
+        }
+        case 503: {
             player.char = 'images/char-pink-girl.png';
             break;
-        case 604:
+        }
+        case 604: {
             player.char = 'images/char-princess-girl.png';
             break;
         }
-    };
+    }
+};
 
 //Texts on the ending screen
 var Texts_end = function() {
