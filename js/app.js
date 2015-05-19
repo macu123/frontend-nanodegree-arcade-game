@@ -47,7 +47,7 @@ Enemy.prototype.render = function(ctx, Resources) {
 // a handleInput() method.
 
 var Player = function() {
-    this.char; //the character image of the player
+    this.char = null; //the character image of the player
     this.x;
     this.y;
     this.life = 5; //the number of lives the player has
@@ -123,19 +123,19 @@ Player.prototype.handleInput = function(str, playerMoveSound, backgroundSound) {
     if (this.life >= 1) {
         if (str === 'left' && this.x >= 101) {
             //play sound when player moves
-            playerMoveSound.play(false);
+            playerMoveSound.play();
             this.x -= 101;
         }
         else if (str === 'up' && this.y >= 144) {
-            playerMoveSound.play(false);
+            playerMoveSound.play();
             this.y -= 78;
         }
         else if (str === 'right' && this.x <= 707) {
-            playerMoveSound.play(false);
+            playerMoveSound.play();
             this.x += 101;
         }
         else if (str === 'down' && this.y <= 378) {
-            playerMoveSound.play(false);
+            playerMoveSound.play();
             if (this.y >= 144) {
                 this.y += 78;
             }
@@ -150,7 +150,7 @@ Player.prototype.handleInput = function(str, playerMoveSound, backgroundSound) {
     else if (this.life < 1) {
         if (str === 'enter') {
             //play background sound when game restart
-            backgroundSound.play(true);
+            backgroundSound.loop_play(gameOverSound);
             this.life = 6;
         }
     }
@@ -202,7 +202,7 @@ Gems.prototype.update = function(player, getRandomInt, getPointSound) {
             this.x = 101 * getRandomInt(0, 8);
             this.y = 70 * getRandomInt(2, 4);
             //play sound when collect Gems
-            getPointSound.play(false);
+            getPointSound.play();
     }
 };
 
@@ -230,11 +230,11 @@ Selectors.prototype.handleInput = function(str, selectorMoveSound, player) {
     if (this.finish === false) {
         if (str === 'left' && this.x >= 301) {  
             //play sound when selector moves
-            selectorMoveSound.play(false);
+            selectorMoveSound.play();
             this.x -= 101;
         }
         else if (str === 'right' && this.x <= 503) {
-            selectorMoveSound.play(false);
+            selectorMoveSound.play();
             this.x += 101;
         }
         else if (str === 'enter') {
@@ -326,18 +326,12 @@ var Sound = function(source) {
     getSound.send();
 };
 
-Sound.prototype.play = function(if_loop) {
+Sound.prototype.play = function() {
     if(this.isLoaded) {
         this.playSound = audioContext.createBufferSource();
         this.playSound.buffer = this.buffer;
         this.playSound.connect(audioContext.destination);
-        if(if_loop) {
-            this.playSound.loop = true;
-            //event handler fired when the sound ends
-            this.playSound.onended = function() {
-                gameOverSound.play(false);
-            };
-        }
+        //start playing a sound
         this.playSound.start();
     }
 
@@ -347,6 +341,22 @@ Sound.prototype.stop = function() {
     this.playSound.stop();
 };
 
+Sound.prototype.loop_play = function(gameOverSound) {
+    if(this.isLoaded) {
+        this.playSound = audioContext.createBufferSource();
+        this.playSound.buffer = this.buffer;
+        this.playSound.connect(audioContext.destination);
+        //set play in loop, which means no-stop
+        this.playSound.loop = true;
+        //event handler fired when the sound ends
+        this.playSound.onended = function() {
+            gameOverSound.play();
+        };
+        //start playing a sound
+        this.playSound.start();
+    }
+    
+};
 
 // Now instantiate your objects.
 //Create audio objects

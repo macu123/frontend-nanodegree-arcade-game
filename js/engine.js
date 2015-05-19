@@ -82,7 +82,7 @@ var Engine = (function(global) {
         reset();
         lastTime = Date.now();
         //Play background music
-        backgroundSound.play(true);
+        backgroundSound.loop_play(gameOverSound);
         main();
     }
 
@@ -110,7 +110,7 @@ var Engine = (function(global) {
                     player.life -= 1;
                     if (player.life >= 1) {
                         //Play sound when player dies
-                        dieSound.play(false);
+                        dieSound.play();
                         reset();
                     }
                 }
