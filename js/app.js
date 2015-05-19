@@ -1,4 +1,25 @@
 "use strict";
+
+//check if the browser is unsupported browser
+var is_explorer = navigator.userAgent.indexOf('MSIE') > -1;
+var is_safari = navigator.userAgent.indexOf('Safari') != -1 &&
+navigator.userAgent.indexOf('Chrome') == -1;
+
+//if the browser is IE
+if (is_explorer) {
+    var warning = "You are using Internet Explorer now!\n" +
+    "Please aware this app doesn't support IE browser.\n" +
+    "Please use any of supported browsers (Chrome, Firefox, Opera)!";
+    alert(warning);
+}
+//if the browser is Safari
+else if(is_safari) {
+    var warning = "You are using Safari browser now!\n" +
+    "Please aware this app doesn't support Safari browser.\n" +
+    "Please use any of supported browsers (Chrome, Firefox, Opera)!";
+    alert(warning);
+}
+
 //shared function to get random integer within given range
 var getRandomInt = function(min, max) {
     return Math.floor(Math.random()*(max-min+1)) + min;

@@ -70,6 +70,7 @@ var Engine = (function(global) {
         win.requestAnimationFrame(main);
     }
 
+    //initialization
     function init() {
         PlayerSelection();   
     }
