@@ -326,6 +326,7 @@ var Sound = function(source) {
     getSound.send();
 };
 
+//play sound once
 Sound.prototype.play = function() {
     if(this.isLoaded) {
         this.playSound = audioContext.createBufferSource();
@@ -337,10 +338,12 @@ Sound.prototype.play = function() {
 
 };
 
+//stop playing sound
 Sound.prototype.stop = function() {
     this.playSound.stop();
 };
 
+//play sound in loop
 Sound.prototype.loop_play = function(gameOverSound) {
     if(this.isLoaded) {
         this.playSound = audioContext.createBufferSource();
