@@ -1,3 +1,4 @@
+"use strict";
 //shared function to get random integer within given range
 var getRandomInt = function(min, max) {
     return Math.floor(Math.random()*(max-min+1)) + min;
@@ -300,7 +301,7 @@ Texts_end.prototype.render = function() {
 //This is Sound Object
 var Sound = function(source) {
     if(!window.audioContext) {
-        audioContext = new AudioContext();
+        window.audioContext = new AudioContext();
     }
     var that = this;
     that.source = source;
