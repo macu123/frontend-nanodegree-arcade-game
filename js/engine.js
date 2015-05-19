@@ -161,7 +161,7 @@ var Engine = (function(global) {
         }
         //If player is in the water, draw the part of player below the water
         if (player.y < 144) {
-            player.render_below_water();
+            player.render_below_water(ctx, Resources);
         }
         /* Loop through the number of rows and columns we've defined above
          * and, using the rowImages array, draw the correct image for that
@@ -195,16 +195,16 @@ var Engine = (function(global) {
      * on your enemy and player entities within app.js
      */
     function renderEntities() {
-        gem.render();
+        gem.render(ctx, Resources);
 
         /* Loop through all of the objects within the allEnemies array and call
          * the render function you have defined.
          */
         allEnemies.forEach(function(enemy) {
-            enemy.render();
+            enemy.render(ctx, Resources);
         });
 
-        player.render();
+        player.render(ctx, Resources);
     }
 
     /* This function does nothing but it could have been a good place to
@@ -256,7 +256,7 @@ var Engine = (function(global) {
         }
 
         //Draw selection arrow on the screen
-        selector.render();
+        selector.render(ctx, Resources);
 
         //Draw all the characters images
         for (col = 0; col < numCols; col++) {
@@ -275,7 +275,7 @@ var Engine = (function(global) {
     //This function makes texts up and down on the screen
     function end_game(dt) {
         text_end.update(dt);
-        text_end.render();
+        text_end.render(ctx);
     }
 
     /* Go ahead and load all of the images we know we're going to need to

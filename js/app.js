@@ -38,7 +38,7 @@ Enemy.prototype.update = function(dt, getRandomInt) {
 };
 
 // Draw the enemy on the screen, required method for game
-Enemy.prototype.render = function() {
+Enemy.prototype.render = function(ctx, Resources) {
     ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
 };
 
@@ -78,7 +78,7 @@ Player.prototype.update = function(dt) {
 };
 
 // Draw the part of player below the water on the screen, required method for game
-Player.prototype.render_below_water = function() {
+Player.prototype.render_below_water = function(ctx, Resources) {
     ctx.drawImage(
         Resources.get(this.char),
         0,
@@ -93,7 +93,7 @@ Player.prototype.render_below_water = function() {
 };
 
 // Draw the player on the screen, required method for game
-Player.prototype.render = function() {
+Player.prototype.render = function(ctx, Resources) {
     //if the player is in the water, draw the part of player above the water
     if (this.y < 144) {
         ctx.drawImage(
@@ -207,7 +207,7 @@ Gems.prototype.update = function(getRandomInt) {
 };
 
 //Draw points and gems on the screen
-Gems.prototype.render = function() {
+Gems.prototype.render = function(ctx, Resources) {
     ctx.font = '30px Arial';
     ctx.fillText('Points: ' + this.points, 750, 80);
     ctx.drawImage(Resources.get(this.gem), this.x, this.y);
@@ -221,7 +221,7 @@ var Selectors = function() {
 };
 
 //Draw selection arrow on the screen
-Selectors.prototype.render = function() {
+Selectors.prototype.render = function(ctx, Resources) {
     ctx.drawImage(Resources.get(this.selector), this.x, 204);
 };
 
@@ -290,7 +290,7 @@ Texts_end.prototype.update = function(dt) {
 };
 
 //Draw texts on the ending screen
-Texts_end.prototype.render = function() {
+Texts_end.prototype.render = function(ctx) {
     ctx.font = '30px Verdana';
     ctx.textAlign = 'center';
     ctx.fillText('Game Over!', this.x, this.y);
