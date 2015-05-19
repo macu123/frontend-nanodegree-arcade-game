@@ -300,7 +300,7 @@ Texts_end.prototype.render = function() {
 //This is Sound Object
 var Sound = function(source) {
     if(!window.audioContext) {
-        audioContext = new AudioContext;
+        audioContext = new AudioContext();
     }
     var that = this;
     that.source = source;
@@ -339,7 +339,7 @@ Sound.prototype.play = function(if_loop) {
 
 Sound.prototype.stop = function() {
     this.playSound.stop();
-}
+};
 
 
 // Now instantiate your objects.
