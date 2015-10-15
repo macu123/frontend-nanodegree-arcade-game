@@ -1,7 +1,7 @@
 Frogger Clone: Gems Collection Adventure
 
 Instructions for Play<br>
-1. Go to http://macu123.github.io/frontend-nanodegree-arcade-game/ using modern HTML5 compliant browser.<br>
+1. Go to [my game](http://macu123.github.io/frontend-nanodegree-arcade-game/) using modern HTML5 compliant browser.<br>
 2. Play and enjoy!
 
 What Should I Do ?<br>
