@@ -13,7 +13,7 @@ if (is_explorer) {
     alert(warning);
 }
 //if the browser is Safari
-else if(is_safari) {
+else if (is_safari) {
     var warning = "You are using Safari browser now!\n" +
     "Please aware this app doesn't support Safari browser.\n" +
     "Please use any of supported browsers (Chrome, Firefox, Opera)!";
@@ -51,7 +51,7 @@ Enemy.prototype.update = function(dt, getRandomInt) {
         this.x += this.speed * dt;
     }
     //if enemy is out of canvas, reassign x, y coordinates and speed
-    else if(this.x > 909) {
+    else if (this.x > 909) {
         this.x = -101 - getRandomInt(100, 1000);
         this.y = 70 * getRandomInt(2, 4);
         this.speed = getRandomInt(100, 500);
@@ -326,7 +326,7 @@ Texts_end.prototype.render = function(ctx) {
 //From HTML5 Web Audio Quickstart Tutorial
 //This is Sound Object
 var Sound = function(source) {
-    if(!window.audioContext) {
+    if (!window.audioContext) {
         window.audioContext = new AudioContext();
     }
     var that = this;
@@ -349,7 +349,7 @@ var Sound = function(source) {
 
 //play sound once
 Sound.prototype.play = function() {
-    if(this.isLoaded) {
+    if (this.isLoaded) {
         this.playSound = audioContext.createBufferSource();
         this.playSound.buffer = this.buffer;
         this.playSound.connect(audioContext.destination);
@@ -366,7 +366,7 @@ Sound.prototype.stop = function() {
 
 //play sound in loop
 Sound.prototype.loop_play = function(gameOverSound) {
-    if(this.isLoaded) {
+    if (this.isLoaded) {
         this.playSound = audioContext.createBufferSource();
         this.playSound.buffer = this.buffer;
         this.playSound.connect(audioContext.destination);
